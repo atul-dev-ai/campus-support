@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=timeAuto&height=300&section=header&text=CampusSupport&fontSize=75&animation=fadeIn&fontAlign=50&fontAlignY=40&fontColor=ffffff&desc=Complaint%20Management%20%26%20Helpdesk%20UI&descAlign=50&descAlignY=65&descSize=20" alt="CampusSupport Banner" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=300&section=header&text=CampusSupport&fontSize=75&animation=fadeIn&fontAlign=50&fontAlignY=40&fontColor=ffffff&desc=Complaint%20Management%20and%20Helpdesk%20UI&descAlign=50&descAlignY=65&descSize=20" alt="CampusSupport Banner" width="100%" />
 
   <br />
   <p><strong>A modern, glassmorphism-based frontend application for submitting and tracking campus complaints and issues.</strong></p>
@@ -49,7 +49,7 @@ Follow these steps to run and edit this project on your local computer:
 
 **1. Clone the repository:**
   ```bash
-  git clone [https://github.com/atul-dev-ai/campus-support.git](https://github.com/atul-dev-ai/campus-support.git)
+  git clone https://github.com/atul-dev-ai/campus-support.git
   ```
 
   ```bash
