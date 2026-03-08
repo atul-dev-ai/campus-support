@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Helpdesk | DIU Support</title>
+  <link rel="stylesheet" href="dist/output.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.4s ease-out forwards;
+    }
+
+    .animate-slide-down {
+      animation: slideDown 0.3s ease-out forwards;
+    }
+
+    /* Modal Base State */
+    #complaint-modal {
+      display: none;
+    }
+
+    #complaint-modal.active {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body class="text-slate-200 flex flex-col min-h-screen relative overflow-x-hidden">
+
+  <div class="fixed inset-0 z-[-1] bg-cover bg-center bg-no-repeat"
+    style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1600&auto=format&fit=crop');">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/80 to-blue-900/90 mix-blend-multiply">
+    </div>
+  </div>
+
+  <nav class="glass-nav sticky top-0 z-40 transition-all duration-300">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center max-w-7xl">
+      <a href="#" class="flex items-center space-x-3 group">
+        <div
+          class="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl text-white shadow-[0_0_15px_rgba(59,130,246,0.5)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.6)] transition-all">
+          <i data-lucide="headphones" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight text-white">Campus<span
+            class="text-blue-400">Support</span></span>
+      </a>
+
+      <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-300 items-center">
+        <a href="#" class="text-blue-400 transition hover:-translate-y-0.5 hover:scale-y-100 duration-300">Dashboard</a>
+        <a href="#" class="hover:text-white transition hover:-translate-y-0.5 hover:scale-y-100 duration-300">My Tickets</a>
+        <a href="#" class="hover:text-white transition hover:-translate-y-0.5 hover:scale-y-100 duration-300">Knowledge Base</a>
+
+        <div class="w-px h-5 bg-slate-700"></div>
+
+        <div class="flex items-center space-x-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span class="text-xs font-medium text-slate-300">Systems Normal</span>
+        </div>
+      </div>
+
+      <button onclick="toggleMobileMenu()"
+        class="md:hidden p-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800/50 transition focus:outline-none">
+        <i data-lucide="menu" id="mobile-menu-icon" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <div id="mobile-menu"
+      class="hidden md:hidden glass-nav border-t border-slate-700 absolute w-full left-0 animate-slide-down">
+      <div class="flex flex-col p-4 space-y-2 text-sm font-bold text-slate-300">
+        <a href="#" class="p-3 bg-blue-500/10 text-blue-400 rounded-xl flex items-center space-x-3"><i
+            data-lucide="layout-dashboard" class="w-4 h-4"></i> <span>Dashboard</span></a>
+        <a href="#"
+          class="p-3 hover:bg-slate-800/50 hover:text-white rounded-xl flex items-center space-x-3 transition"><i
+            data-lucide="ticket" class="w-4 h-4"></i> <span>My Tickets</span></a>
+        <a href="#"
+          class="p-3 hover:bg-slate-800/50 hover:text-white rounded-xl flex items-center space-x-3 transition"><i
+            data-lucide="book-open" class="w-4 h-4"></i> <span>Knowledge Base</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow flex items-center justify-center py-10 px-4 relative z-10">
+    <div class="container mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+        <div class="text-center lg:text-left animate-slide-up">
+          <div
+            class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full mb-6">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400 animate-bounce"></i>
+            <span class="text-xs font-bold text-blue-300 uppercase tracking-wider animate-pulse">Fast Issue Resolution</span>
+          </div>
+
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            Report Issues. <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-slate-300">Get
+              Solutions.</span>
+          </h1>
+
+          <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            Facing an issue on campus? From broken projectors to WiFi problems, report it directly to the concerned
+            authority and track your resolution status in real-time.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <button onclick="openModal()"
+              class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 group duration-300 focus:outline-none cursor-pointer">
+              <i data-lucide="plus-circle" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300"></i>
+              New Complaint
+            </button>
+
+            <a href="#recent"
+              class="w-full sm:w-auto px-8 py-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 text-white font-semibold rounded-xl backdrop-blur-sm transition-all flex items-center justify-center gap-2">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 animate-bounce"></i> Track Ticket
+            </a>
+          </div>
+
+          <div class="mt-12 grid grid-cols-3 gap-4 border-t border-slate-700/50 pt-8 max-w-md mx-auto lg:mx-0">
+            <div>
+              <p class="text-3xl font-extrabold text-white">2.4k</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wide mt-1">Resolved</p>
+            </div>
+            <div>
+              <p class="text-3xl font-extrabold text-white">45m</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wide mt-1">Avg. Response</p>
+            </div>
+            <div>
+              <p class="text-3xl font-extrabold text-emerald-400">98%</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wide mt-1">Satisfaction</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- right side -->
+        <div class="hidden lg:block animate-fade-in" style="animation-delay: 0.2s;">
+          <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+            <div
+              class="absolute -top-20 -right-20 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-all duration-700">
+            </div>
+
+            <div class="flex justify-between items-center mb-6 border-b border-slate-700/50 pb-4 relative z-10">
+              <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="activity"
+                  class="w-5 h-5 text-blue-400"></i> Live Ticket Feed</h3>
+              <span class="text-xs font-medium bg-slate-800 text-slate-300 px-2 py-1 rounded">Last 2 hours</span>
+            </div>
+
+            <div class="space-y-4 relative z-10">
+              <div class="flex gap-4 items-start p-3 rounded-xl hover:bg-slate-800/30 transition">
+                <div class="p-2 bg-emerald-500/10 rounded-lg shrink-0 border border-emerald-500/20"><i
+                    data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i></div>
+                <div>
+                  <div class="flex justify-between items-center mb-1 cursor-pointer">
+                    <p class="text-sm font-bold text-slate-200">#CMP-1042: WiFi Issue</p>
+                    <span class="text-[10px] text-slate-500">10m ago</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Library 2nd floor router restarted. Connection restored.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-4 items-start p-3 rounded-xl hover:bg-slate-800/30 transition cursor-pointer">
+                <div class="p-2 bg-amber-500/10 rounded-lg shrink-0 border border-amber-500/20"><i data-lucide="clock"
+                    class="w-5 h-5 text-amber-400"></i></div>
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <p class="text-sm font-bold text-slate-200">#CMP-1045: Broken AC</p>
+                    <span class="text-[10px] text-slate-500">25m ago</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Maintenance team assigned to room 402.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-4 items-start p-3 rounded-xl hover:bg-slate-800/30 transition cursor-pointer animate-pulse">
+                <div class="p-2 bg-blue-500/10 rounded-lg shrink-0 border border-blue-500/20"><i data-lucide="file-plus"
+                    class="w-5 h-5 text-blue-400"></i></div>
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <p class="text-sm font-bold text-slate-200">#CMP-1048: ID Card Lost</p>
+                    <span class="text-[10px] text-slate-500">Just now</span>
+                  </div>
+                  <p class="text-xs text-slate-400">New ticket submitted to Student Affairs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="relative z-10 border-t border-slate-700/50 mt-auto bg-slate-900/40 backdrop-blur-xl">
+    <div class="container mx-auto px-4 py-12 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+        <div class="flex flex-col space-y-4">
+          <a href="#" class="flex items-center space-x-3 group">
+            <div
+              class="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+              <i data-lucide="headphones" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight text-white">Campus<span
+                class="text-blue-400">Support</span></span>
+          </a>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            A centralized helpdesk and complaint management system designed to resolve campus issues efficiently and
+            transparently.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-5 uppercase text-xs tracking-widest flex items-center"><i
+              data-lucide="link" class="w-4 h-4 mr-2 text-blue-500"></i> Quick Links</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="#" class="text-slate-400 hover:text-blue-400 transition flex items-center group"><span
+                  class="w-1.5 h-1.5 bg-slate-600 rounded-full mr-2 group-hover:bg-blue-400 transition"></span> Support
+                Dashboard</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-blue-400 transition flex items-center group"><span
+                  class="w-1.5 h-1.5 bg-slate-600 rounded-full mr-2 group-hover:bg-blue-400 transition"></span> Track a
+                Ticket</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-blue-400 transition flex items-center group"><span
+                  class="w-1.5 h-1.5 bg-slate-600 rounded-full mr-2 group-hover:bg-blue-400 transition"></span>
+                Knowledge
+                Base</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2">
+          <h4 class="text-white font-bold mb-5 uppercase text-xs tracking-widest flex items-center"><i
+              data-lucide="code-2" class="w-4 h-4 mr-2 text-blue-500"></i> Project Developer</h4>
+
+          <div
+            class="bg-slate-800/40 border border-slate-700/50 p-6 rounded-2xl hover:border-blue-500/50 transition duration-300 shadow-lg relative overflow-hidden group  hover:scale-y-100 hover:-translate-y-0.5">
+            <div
+              class="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition duration-500">
+            </div>
+
+            <div
+              class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5 relative z-10">
+              <div
+                class="w-20 h-20 rounded-full overflow-hidden shrink-0 border-2 border-slate-600 ring-2 ring-blue-500/30 group-hover:ring-blue-500 transition duration-300">
+                <img src="./static/images/atul.jpg" alt="Atul Paul"
+                  onerror="this.src='https://ui-avatars.com/api/?name=Atul+Paul&background=3b82f6&color=fff&size=128'"
+                  class="w-full h-full object-cover">
+              </div>
+
+              <div class="text-center sm:text-left">
+                <h5 class="text-xl font-bold text-white mb-1 tracking-wide">Atul Paul</h5>
+                <p class="text-sm font-medium text-blue-400 mb-2">Software & Web Developer</p>
+                <p class="text-xs text-slate-400 mb-4 max-w-xs">Computer Science student at DIU, passionate about
+                  Generative AI, Deep Learning, and building modern web apps.</p>
+
+                <div class="flex justify-center sm:justify-start space-x-3">
+                  <a href="https://github.com/atul-dev-ai" target="_blank"
+                    class="flex items-center space-x-2 bg-slate-900/50 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-slate-700 hover:scale-110 hover:-translate-y-0.5 duration-300">
+                    <i data-lucide="github" class="w-4 h-4"></i> <span>GitHub</span>
+                  </a>
+                  <a href="https://linkedin.com/in/paul-atul" target="_blank"
+                    class="flex items-center space-x-2 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-blue-500/30 hover:scale-110 hover:-translate-y-0.5 duration-300">
+                    <i data-lucide="linkedin" class="w-4 h-4"></i> <span>LinkedIn</span>
+                  </a>
+                  <a href="https://atulpaul.vercel.app" target="_blank"
+                    class="flex items-center space-x-2 bg-slate-600/25 hover:bg-slate-600/50 text-slate-400 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-blue-500/30 hover:scale-110 hover:-translate-y-0.5 duration-300">
+                    <i data-lucide="book-a" class="w-4 h-4"></i> <span>Portfolio</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="mt-12 pt-6 border-t border-slate-800/80 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
+        <p>&copy; 2026 Campus Support Desk. Built for DIU Smart City.</p>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-slate-300 transition">Privacy Policy</a>
+          <a href="#" class="hover:text-slate-300 transition">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="complaint-modal"
+    class="fixed inset-0 z-50 items-center justify-center px-4 py-6 sm:p-0 bg-slate-900/60 backdrop-blur-sm">
+
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true" onclick="closeModal()"></div>
+
+    <div
+      class="glass-card flex flex-col max-h-[90vh] rounded-3xl text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full border border-slate-600/50 animate-slide-up relative z-10">
+
+      <div class="bg-slate-800/50 border-b border-slate-700 px-6 py-5 flex justify-between items-center shrink-0">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <div class="bg-blue-500/20 p-1.5 rounded-lg"><i data-lucide="alert-circle" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          Submit a Complaint
+        </h3>
+        <button onclick="closeModal()"
+          class="text-slate-400 hover:text-white hover:bg-slate-700/50 p-2 rounded-xl transition focus:outline-none">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="complaint-form" class="px-6 py-6 space-y-5 overflow-y-auto" onsubmit="submitForm(event)">
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-300 mb-2">Category <span
+              class="text-red-400">*</span></label>
+          <div class="relative">
+            <select required
+              class="block w-full pl-4 pr-10 py-3 text-base bg-slate-900/50 border border-slate-700 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none">
+              <option value="" disabled selected>Select an issue category...</option>
+              <option value="it">IT & WiFi Issues</option>
+              <option value="maintenance">Classroom Maintenance</option>
+              <option value="hostel">Hostel/Dormitory</option>
+              <option value="academic">Academic/Library</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-300 mb-2">Subject <span
+              class="text-red-400">*</span></label>
+          <input type="text" required placeholder="E.g., Projector not working in Room 302"
+            class="block w-full px-4 py-3 bg-slate-900/50 border border-slate-700 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-slate-500">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-300 mb-2">Detailed Description <span
+              class="text-red-400">*</span></label>
+          <textarea required rows="4" placeholder="Please provide specific details about the issue..."
+            class="block w-full px-4 py-3 bg-slate-900/50 border border-slate-700 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-slate-500 resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-300 mb-2">Attachment (Optional)</label>
+          <div
+            class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-700 border-dashed rounded-xl hover:border-blue-500/50 hover:bg-slate-800/30 transition cursor-pointer group">
+            <div class="space-y-2 text-center">
+              <i data-lucide="upload-cloud"
+                class="mx-auto h-8 w-8 text-slate-400 group-hover:text-blue-400 transition"></i>
+              <div class="flex text-sm text-slate-400 justify-center">
+                <span
+                  class="relative cursor-pointer rounded-md font-medium text-blue-400 hover:text-blue-300 focus-within:outline-none">
+                  <span>Upload a file</span>
+                  <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                </span>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-slate-500">PNG, JPG, PDF up to 5MB</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 mt-2 border-t border-slate-700 flex flex-col-reverse sm:flex-row justify-end gap-3 shrink-0">
+          <button type="button" onclick="closeModal()"
+            class="w-full sm:w-auto px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-xl border border-slate-600 transition focus:outline-none">
+            Cancel
+          </button>
+          <button type="submit"
+            class="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition flex items-center justify-center gap-2 focus:outline-none">
+            <i data-lucide="send" class="w-4 h-4"></i> Submit Ticket
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Mobile Menu Logic
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+
+      menu.classList.toggle('hidden');
+
+      if (menu.classList.contains('hidden')) {
+        icon.setAttribute('data-lucide', 'menu');
+      } else {
+        icon.setAttribute('data-lucide', 'x');
+      }
+      lucide.createIcons();
+    }
+
+    // Modal Logic
+    const modal = document.getElementById('complaint-modal');
+
+    function openModal() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // Handle Form Submission Demo
+    function submitForm(event) {
+      event.preventDefault(); // Prevent page reload
+
+      // Get the submit button to show loading state
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const originalContent = submitBtn.innerHTML;
+
+      // Show loading state
+      submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Submitting...';
+      submitBtn.disabled = true;
+      lucide.createIcons();
+
+      // Simulate API call delay (1.5 seconds)
+      setTimeout(() => {
+        alert('Ticket submitted successfully! Your Ticket ID is #CMP-1049. We will look into it shortly.');
+
+        // Reset form and close modal
+        event.target.reset();
+        submitBtn.innerHTML = originalContent;
+        submitBtn.disabled = false;
+        lucide.createIcons();
+        closeModal();
+      }, 1500);
+    }
+  </script>
+</body>
+
+</html>
